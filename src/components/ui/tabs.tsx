@@ -1,6 +1,6 @@
 "use client";
 
-import { type HTMLMotionProps, motion, type Transition, AnimatePresence } from "motion/react";
+import { type HTMLMotionProps, motion, type Transition } from "motion/react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -132,8 +132,8 @@ function TabsList({
   return (
     <div
       className={cn(
-        "bg-muted text-muted-foreground relative inline-flex h-10 w-fit items-center justify-center rounded-xl p-1",
-        className
+        "bg-muted text-muted-foreground relative inline-flex h-10 w-fit items-center justify-center rounded-4xl p-1 overflow-hidden",
+        className,
       )}
       data-slot="tabs-list"
       role="tablist"
@@ -141,7 +141,7 @@ function TabsList({
     >
       {children}
     </div>
-  )
+  );
 }
 
 type TabsTriggerProps = HTMLMotionProps<"button"> & {
@@ -149,24 +149,39 @@ type TabsTriggerProps = HTMLMotionProps<"button"> & {
   children: React.ReactNode;
 };
 
-function TabsTrigger({ ref, value, children, className, ...props }: TabsTriggerProps) {
-  const { activeValue, handleValueChange, registerTrigger } = useTabs()
-  const isActive = activeValue === value
+function TabsTrigger({
+  ref,
+  value,
+  children,
+  className,
+  ...props
+}: TabsTriggerProps) {
+  const { activeValue, handleValueChange, registerTrigger } = useTabs();
+  const isActive = activeValue === value;
 
-  const localRef = React.useRef<HTMLButtonElement | null>(null)
-  React.useImperativeHandle(ref as any, () => localRef.current as HTMLButtonElement)
+  // Track if this is the first time the component is rendering to skip entrance animation
+  const [isFirstRender, setIsFirstRender] = React.useState(true);
+  React.useEffect(() => {
+    setIsFirstRender(false);
+  }, []);
+
+  const localRef = React.useRef<HTMLButtonElement | null>(null);
+  React.useImperativeHandle(
+    ref as any,
+    () => localRef.current as HTMLButtonElement,
+  );
 
   React.useEffect(() => {
-    registerTrigger(value, localRef.current)
-    return () => registerTrigger(value, null)
-  }, [value, registerTrigger])
+    registerTrigger(value, localRef.current);
+    return () => registerTrigger(value, null);
+  }, [value, registerTrigger]);
 
   return (
     <motion.button
       className={cn(
-        "relative inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 z-[1]",
+        "relative inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-4xl px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 z-[1]",
         isActive ? "text-foreground" : "hover:text-foreground/80",
-        className
+        className,
       )}
       data-slot="tabs-trigger"
       data-state={isActive ? "active" : "inactive"}
@@ -179,17 +194,22 @@ function TabsTrigger({ ref, value, children, className, ...props }: TabsTriggerP
       {isActive && (
         <motion.div
           layoutId="active-tab"
-          className="absolute inset-0 z-[-1] rounded-lg bg-background shadow-sm"
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 30,
-          }}
+          className="absolute inset-0 z-[-1] rounded-4xl bg-background shadow-sm"
+          initial={false}
+          transition={
+            isFirstRender
+              ? { duration: 0 }
+              : {
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 30,
+                }
+          }
         />
       )}
       <span className="relative z-10">{children}</span>
     </motion.button>
-  )
+  );
 }
 
 type TabsContentsProps = React.ComponentProps<"div"> & {
@@ -211,13 +231,16 @@ function TabsContents({
 }: TabsContentsProps) {
   const { activeValue } = useTabs();
   const childrenArray = React.Children.toArray(children);
-  const activeIndex = childrenArray.findIndex(
-    (child): child is React.ReactElement<{ value: string }> =>
-      React.isValidElement(child) &&
-      typeof child.props === "object" &&
-      child.props !== null &&
-      "value" in child.props &&
-      child.props.value === activeValue,
+  const activeIndex = Math.max(
+    0,
+    childrenArray.findIndex(
+      (child): child is React.ReactElement<{ value: string }> =>
+        React.isValidElement(child) &&
+        typeof child.props === "object" &&
+        child.props !== null &&
+        "value" in child.props &&
+        child.props.value === activeValue,
+    ),
   );
 
   return (
@@ -228,6 +251,7 @@ function TabsContents({
     >
       <motion.div
         animate={{ x: `${activeIndex * -100}%` }}
+        initial={false}
         className="flex -mx-2"
         transition={transition}
       >
@@ -257,10 +281,10 @@ function TabsContent({
   return (
     <motion.div
       animate={{ filter: isActive ? "blur(0px)" : "blur(4px)" }}
+      initial={false}
       className={cn("overflow-hidden", className)}
       data-slot="tabs-content"
       exit={{ filter: "blur(0px)" }}
-      initial={{ filter: "blur(0px)" }}
       role="tabpanel"
       transition={{ type: "spring", stiffness: 200, damping: 25 }}
       {...(props as any)}
@@ -272,15 +296,15 @@ function TabsContent({
 
 export {
   Tabs,
+  TabsContent,
+  TabsContents,
   TabsList,
   TabsTrigger,
-  TabsContents,
-  TabsContent,
   useTabs,
-  type TabsContextType,
-  type TabsProps,
-  type TabsListProps,
-  type TabsTriggerProps,
-  type TabsContentsProps,
   type TabsContentProps,
+  type TabsContentsProps,
+  type TabsContextType,
+  type TabsListProps,
+  type TabsProps,
+  type TabsTriggerProps,
 };
