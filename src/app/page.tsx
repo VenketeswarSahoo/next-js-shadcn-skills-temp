@@ -19,7 +19,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -47,7 +55,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -70,7 +78,7 @@ import {
 } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toggle } from "@/components/ui/toggle";
 import {
   Tooltip,
@@ -78,13 +86,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  List,
-  Profile,
-  Settings,
-  Trash,
-  UserAccountIcon,
-} from "@hugeicons/core-free-icons";
+import { cn } from "@/lib/utils";
+import { List, Profile, Settings, Trash } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   BluetoothIcon,
@@ -92,12 +95,25 @@ import {
   SettingsIcon,
   StarIcon,
 } from "lucide-react";
-import Image from "next/image";
-import React from "react";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
-
+import Image from "next/image";
+import React, { useState } from "react";
+import * as z from "zod";
+import { toast } from "sonner";
+import { useForm } from "@tanstack/react-form";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
 const initialProps = {
   pathLength: 0,
   opacity: 0,
@@ -113,7 +129,50 @@ type Props = React.ComponentProps<typeof motion.svg> & {
   onAnimationComplete?: () => void;
 };
 
+const formSchema = z.object({
+  title: z
+    .string()
+    .min(5, "Bug title must be at least 5 characters.")
+    .max(32, "Bug title must be at most 32 characters."),
+  description: z
+    .string()
+    .min(20, "Description must be at least 20 characters.")
+    .max(100, "Description must be at most 100 characters."),
+});
+
 const Home = () => {
+  const [date, setDate] = useState<Date | undefined>(undefined);
+
+  React.useEffect(() => {
+    setDate(new Date());
+  }, []);
+
+  const form = useForm({
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value }) => {
+      toast("You submitted the following values:", {
+        description: (
+          <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
+            <code>{JSON.stringify(value, null, 2)}</code>
+          </pre>
+        ),
+        position: "bottom-right",
+        classNames: {
+          content: "flex flex-col gap-2",
+        },
+        style: {
+          "--border-radius": "calc(var(--radius)  + 4px)",
+        } as React.CSSProperties,
+      });
+    },
+  });
+
   return (
     <div className="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
       <AppleHelloEnglishEffect
@@ -126,9 +185,7 @@ const Home = () => {
         </h2>
         <div className="flex flex-wrap gap-4">
           <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button>Open Alert Dialog</Button>
-            </AlertDialogTrigger>
+            <AlertDialogTrigger render={<Button>Open Alert Dialog</Button>} />
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogMedia>
@@ -148,9 +205,9 @@ const Home = () => {
           </AlertDialog>
 
           <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Open Dialog</Button>
-            </DialogTrigger>
+            <DialogTrigger
+              render={<Button variant="outline">Open Dialog</Button>}
+            />
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Premium Dialog</DialogTitle>
@@ -164,7 +221,7 @@ const Home = () => {
 
           <Drawer direction="right">
             <DrawerTrigger asChild>
-              <Button variant="secondary">Open Drawer</Button>
+              <Button variant="outline">Open Drawer</Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
@@ -180,9 +237,9 @@ const Home = () => {
           </Drawer>
 
           <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline">Open Sheet</Button>
-            </SheetTrigger>
+            <SheetTrigger
+              render={<Button variant="outline">Open Sheet</Button>}
+            />
             <SheetContent side="right">
               <SheetHeader>
                 <SheetTitle>Edit Profile</SheetTitle>
@@ -210,11 +267,13 @@ const Home = () => {
         </h2>
         <div className="flex flex-wrap items-center gap-4">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <MoreHorizontalIcon />
-              </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+              render={
+                <Button variant="outline" size="icon">
+                  <MoreHorizontalIcon />
+                </Button>
+              }
+            />
             <DropdownMenuContent>
               <DropdownMenuGroup>
                 <DropdownMenuLabel> Account</DropdownMenuLabel>
@@ -248,11 +307,13 @@ const Home = () => {
           </Select>
 
           <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <SettingsIcon />
-              </Button>
-            </PopoverTrigger>
+            <PopoverTrigger
+              render={
+                <Button variant="ghost" size="icon">
+                  <SettingsIcon />
+                </Button>
+              }
+            />
             <PopoverContent className="w-80">
               <div className="grid gap-4">
                 <div className="space-y-2">
@@ -321,6 +382,40 @@ const Home = () => {
             </div>
           </Field>
         </div>
+        <div className="flex gap-4 mt-4">
+          <Badge>Default Badge</Badge>
+          <Badge variant="outline">Outline Badge</Badge>
+          <Badge variant="destructive">Destructive Badge</Badge>
+          <Badge variant="secondary">Secondary Badge</Badge>
+        </div>
+        <div className="mt-6 flex items-center gap-4">
+          <Popover>
+            <PopoverTrigger
+              render={
+                <Button variant="outline">
+                  {date
+                    ? date.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "Pick a date"}
+                </Button>
+              }
+            />
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                captionLayout="dropdown"
+                selected={date}
+                onSelect={setDate}
+                // disabled={(date) =>
+                //   date < new Date(Date.now() - 1000 * 60 * 60 * 24)
+                // }
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </section>
 
       <section className="flex flex-col gap-4">
@@ -331,14 +426,16 @@ const Home = () => {
           <div className="flex flex-wrap items-center gap-8">
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-2">
-                    <Switch id="airplane-mode" />
-                    <FieldLabel htmlFor="airplane-mode">
-                      Airplane Mode
-                    </FieldLabel>
-                  </div>
-                </TooltipTrigger>
+                <TooltipTrigger
+                  render={
+                    <div className="flex items-center gap-2">
+                      <Switch id="airplane-mode" />
+                      <FieldLabel htmlFor="airplane-mode">
+                        Airplane Mode
+                      </FieldLabel>
+                    </div>
+                  }
+                />
                 <TooltipContent>Toggle system-wide connectivity</TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -362,11 +459,13 @@ const Home = () => {
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           Visual Effects
         </h2>
-        <Card className="group/card relative h-96 w-full max-w-sm overflow-hidden border-0 p-0 shadow-2xl rounded-3xl">
+        <Card className="group/card relative h-96 w-full max-w-sm">
           <Image
             src="https://images.unsplash.com/photo-1774347180942-a30dc0669d61?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Background"
             fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-110"
           />
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/80 to-transparent transition-all duration-500 group-hover/card:h-2/3" />
@@ -379,6 +478,112 @@ const Home = () => {
               overlay on hover, using hardware-accelerated transforms.
             </p>
           </div>
+        </Card>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          Form
+        </h2>
+        <Card className="w-full sm:max-w-sm">
+          <CardHeader>
+            <CardTitle>Bug Report</CardTitle>
+            <CardDescription>
+              Help us improve by reporting bugs you encounter.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              id="bug-report-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                form.handleSubmit();
+              }}
+            >
+              <FieldGroup>
+                <form.Field
+                  name="title"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name} required>
+                          Bug Title
+                        </FieldLabel>
+                        <Input
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          aria-invalid={isInvalid}
+                          placeholder="Login button not working on mobile"
+                          autoComplete="off"
+                        />
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    );
+                  }}
+                />
+                <form.Field
+                  name="description"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name} required>
+                          Description
+                        </FieldLabel>
+                        <InputGroup>
+                          <InputGroupTextarea
+                            id={field.name}
+                            name={field.name}
+                            value={field.state.value}
+                            onBlur={field.handleBlur}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            placeholder="I'm having an issue with the login button on mobile."
+                            rows={6}
+                            className="min-h-24 resize-none"
+                            aria-invalid={isInvalid}
+                          />
+                          <InputGroupAddon align="block-end">
+                            <InputGroupText className="tabular-nums">
+                              {field.state.value.length}/100 characters
+                            </InputGroupText>
+                          </InputGroupAddon>
+                        </InputGroup>
+                        <FieldDescription>
+                          Include steps to reproduce, expected behavior, and
+                          what actually happened.
+                        </FieldDescription>
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    );
+                  }}
+                />
+              </FieldGroup>
+            </form>
+          </CardContent>
+          <CardFooter>
+            <Field orientation="horizontal">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => form.reset()}
+              >
+                Reset
+              </Button>
+              <Button type="submit" form="bug-report-form">
+                Submit
+              </Button>
+            </Field>
+          </CardFooter>
         </Card>
       </section>
     </div>
