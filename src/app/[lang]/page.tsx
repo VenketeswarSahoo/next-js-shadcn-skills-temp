@@ -1,5 +1,6 @@
 import AboutSection from "@/components/Home/about-section";
 import CTASection from "@/components/Home/cta-section";
+import Footer from "@/components/Home/footer";
 import Hero from "@/components/Home/hero";
 import PartnerSection from "@/components/Home/partner-section";
 import ProcessSection from "@/components/Home/process-section";
@@ -23,6 +24,7 @@ const Home = ({ params }: PageProps) => {
       <ProcessSection />
       <SelectedWorkSection />
       <CTASection />
+      <Footer />
     </div>
   );
 };
