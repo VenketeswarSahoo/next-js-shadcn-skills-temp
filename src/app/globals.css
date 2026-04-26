@@ -66,6 +66,22 @@
       height: 0;
     }
   }
+  @keyframes ticker {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes ticker-reverse {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 }
 
 .animate-accordion-down {
@@ -73,6 +89,23 @@
 }
 .animate-accordion-up {
   animation: accordion-up 200ms ease-in;
+}
+.animate-ticker {
+  animation: ticker 60s linear infinite;
+}
+.animate-ticker-reverse {
+  animation: ticker-reverse 60s linear infinite;
+}
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
 }
 
 :root {
@@ -150,6 +183,10 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--primary) 30%, transparent);
+    color: var(--primary);
   }
   html {
     @apply font-sans;

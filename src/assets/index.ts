@@ -1,1 +1,24 @@
 export { default as Logo } from "./Img/Logo.svg";
+export { default as partner1 } from "./Img/partner1.png";
+export { default as partner2 } from "./Img/partner2.png";
+export { default as partner3 } from "./Img/partner3.png";
+export { default as partner4 } from "./Img/partner4.png";
+export { default as partner5 } from "./Img/partner5.png";
+export { default as partner6 } from "./Img/partner6.png";
+export { default as partner7 } from "./Img/partner7.png";
+export { default as partner8 } from "./Img/partner8.png";
+export { default as partner9 } from "./Img/partner9.png";
+export { default as partner10 } from "./Img/partner10.png";
+export { default as partner11 } from "./Img/partner11.png";
+export { default as partner12 } from "./Img/partner12.png";
+export { default as partner13 } from "./Img/partner13.png";
+export { default as partner14 } from "./Img/partner14.png";
+export { default as partner15 } from "./Img/partner15.png";
+export { default as partner16 } from "./Img/partner16.png";
+export { default as partner17 } from "./Img/partner17.png";
+
+export { default as work1 } from "./Img/work1.png";
+export { default as work2 } from "./Img/work2.png";
+export { default as work3 } from "./Img/work3.png";
+
+export { default as ProjectLink } from "./Img/project-link.svg";
