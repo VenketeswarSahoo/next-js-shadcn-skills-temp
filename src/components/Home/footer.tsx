@@ -90,7 +90,7 @@ const Footer = () => {
               </p>
             </div>
 
-            <div className="flex items-center w-full lg:w-auto gap-2 p-1.5 bg-white/5 border border-white/10 rounded-full focus-within:border-primary/50 transition-colors">
+            <div className="flex items-center w-full lg:w-auto gap-2 p-2 bg-white/5 border border-white/10 rounded-full focus-within:border-primary/50 transition-colors">
               <div className="pl-4 text-white/20">
                 <Mail className="size-4" />
               </div>
@@ -206,7 +206,7 @@ const Footer = () => {
                   <li key={item.name}>
                     <a
                       href="#"
-                      className="flex items-center gap-3 text-muted-foreground text-sm hover:text-primary transition-colors"
+                      className="flex items-center gap-4 text-muted-foreground text-sm hover:text-primary transition-colors"
                     >
                       {item.icon}
                       {item.name}

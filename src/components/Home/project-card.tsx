@@ -1,0 +1,78 @@
+import React from "react";
+import Image, { StaticImageData } from "next/image";
+import { ProjectLink } from "@/assets";
+import { ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface ProjectCardProps {
+  title: string;
+  categories: string;
+  image: StaticImageData;
+  isFeatured?: boolean;
+  className?: string;
+}
+
+const ProjectCard = ({
+  title,
+  categories,
+  image,
+  isFeatured = false,
+  className,
+}: ProjectCardProps) => {
+  return (
+    <div className={cn("group cursor-pointer", className)}>
+      <div
+        className={cn(
+          "relative w-full overflow-hidden bg-white/5 mb-4",
+          isFeatured ? "aspect-[16/9] lg:aspect-[21/9]" : "aspect-[4/3]",
+        )}
+      >
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <div
+            className={cn(
+              "relative flex items-center justify-center",
+              isFeatured
+                ? "w-28 h-28 md:w-44 md:h-44"
+                : "w-24 h-24 md:w-36 md:h-36",
+            )}
+          >
+            {/* Dark circular backdrop */}
+            <div className="absolute inset-2 bg-black/60 rounded-full border border-white/5 shadow-2xl"></div>
+
+            {/* Rotating Text */}
+            <div className="absolute inset-0 animate-spin-slow">
+              <Image
+                src={ProjectLink}
+                alt="View Project"
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* Static Arrow */}
+            <ArrowUpRight
+              className={cn(
+                "relative z-10 text-white opacity-90",
+                isFeatured ? "size-8 md:size-12" : "size-6 md:size-10",
+              )}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col lg:flex-row items-start justify-between lg:gap-4">
+        <h3 className="text-sm lg:text-md text-muted-foreground">{title}</h3>
+        <p className="text-xs lg:text-sm text-muted-foreground">
+          ({categories})
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default ProjectCard;

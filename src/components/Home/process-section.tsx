@@ -1,4 +1,5 @@
 import React from "react";
+import Section from "../ui/section";
 
 const processes = [
   {
@@ -35,10 +36,7 @@ const processes = [
 
 const ProcessSection = () => {
   return (
-    <section
-      id="process"
-      className="relative w-full px-6 lg:px-12 2xl:px-0 max-w-[1440px] mx-auto py-16 lg:py-40"
-    >
+    <Section id="process" py="py-16 lg:py-40">
       <div className="flex flex-col gap-12 lg:gap-20">
         {/* Header */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end border-b border-white/10 pb-12 gap-8">
@@ -81,7 +79,7 @@ const ProcessSection = () => {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 

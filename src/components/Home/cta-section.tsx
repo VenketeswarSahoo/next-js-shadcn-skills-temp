@@ -1,9 +1,11 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
 
+import Section from "../ui/section";
+
 const CTASection = () => {
   return (
-    <section className="relative w-full bg-black py-16 lg:py-40 px-6 lg:px-12 2xl:px-0">
+    <Section py="py-16 lg:py-40">
       <div className="max-w-[1440px] mx-auto border-t border-white/10 pt-16 lg:pt-24">
         <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-12 lg:gap-24">
           <div className="flex flex-col gap-6 lg:gap-8 max-w-4xl">
@@ -28,8 +30,9 @@ const CTASection = () => {
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
+
 
 export default CTASection;

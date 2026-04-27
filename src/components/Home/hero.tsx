@@ -8,6 +8,8 @@ interface PageProps {
   params: Promise<{ lang: string }>;
 }
 
+import Section from "../ui/section";
+
 export default async function Hero({ params }: PageProps) {
   const { lang } = await params;
 
@@ -30,8 +32,13 @@ export default async function Hero({ params }: PageProps) {
       {/* Pass dictionary and current lang to the client component */}
       <HomeClient dict={dict} lang={lang} />
 
-      <section className="max-w-360 mx-auto min-h-[calc(100svh-120px)] lg:min-h-[calc(100vh-200px)] w-full px-6 lg:px-12 2xl:px-0 flex flex-col justify-center lg:block pb-16 lg:pb-0">
-        <div className="relative lg:absolute lg:bottom-24 xl:bottom-40 w-full lg:w-auto">
+      <Section
+        py=""
+        className="min-h-[calc(100svh-120px)] lg:min-h-[calc(100vh-200px)] flex flex-col justify-end lg:block pb-16 lg:pb-0"
+      >
+        <div className="relative lg:absolute lg:bottom-12 xl:bottom-16 w-full lg:w-auto">
+
+
           <div className="grid grid-cols-1 lg:grid-cols-12 items-end gap-10 lg:gap-0">
             <div className="lg:col-span-7 xl:col-span-7">
               <div>
@@ -44,7 +51,7 @@ export default async function Hero({ params }: PageProps) {
 
             <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-8 lg:gap-10">
               <div className="flex flex-col gap-6 lg:gap-8">
-                <p className="text-base lg:text-lg text-white/40 max-w-360">
+                <p className="text-base lg:text-lg text-white/40 max-w-[1440px]">
                   {dict.description}
                 </p>
 
@@ -55,10 +62,10 @@ export default async function Hero({ params }: PageProps) {
             </div>
           </div>
         </div>
-      </section>
+      </Section>
       <div className="relative lg:absolute bottom-0 w-full z-10">
         <div className="border-y border-white/20 py-4 w-full">
-          <p className="text-white/40 max-w-360 mx-auto px-6 lg:px-12 2xl:px-0 uppercase text-sm text-center lg:text-left leading-relaxed">
+          <p className="text-white/40 max-w-[1440px] mx-auto px-6 lg:px-12 2xl:px-0 uppercase text-sm text-center lg:text-left leading-relaxed">
             {dict.techStack}
           </p>
         </div>
@@ -66,3 +73,4 @@ export default async function Hero({ params }: PageProps) {
     </main>
   );
 }
+

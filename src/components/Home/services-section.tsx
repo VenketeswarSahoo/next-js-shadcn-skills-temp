@@ -80,7 +80,7 @@ const ServicesSection = () => {
                   handoff delays.
                 </h2>
                 <div className="flex items-center gap-4 text-xs text-muted-foreground uppercase mt-8">
-                  <span className="flex gap-1">
+                  <span className="flex gap-2">
                     {[...Array(6)].map((_, i) => (
                       <span
                         key={i}

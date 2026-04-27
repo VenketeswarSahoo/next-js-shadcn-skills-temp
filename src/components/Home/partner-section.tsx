@@ -46,10 +46,13 @@ const services = [
   "Design Systems",
 ];
 
+import Section from "../ui/section";
+
 const PartnerSection = () => {
   return (
-    <section className="relative w-full px-6 lg:px-12 2xl:px-0 max-w-[1440px] mx-auto py-12 lg:py-32">
+    <Section py="py-12 lg:py-32">
       <div className="relative w-full bg-primary overflow-hidden min-h-[180px] flex items-center p-10 lg:p-16">
+
         <div className="relative z-10 max-w-3xl">
           <h2 className="text-3xl lg:text-4xl text-white mb-4">
             We partner with teams that need more than execution.
@@ -135,7 +138,7 @@ const PartnerSection = () => {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 
