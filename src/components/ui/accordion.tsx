@@ -6,34 +6,31 @@ import { ArrowDown01Icon, ArrowUp01Icon } from "@hugeicons/core-free-icons"
 
 interface AccordionProps extends React.ComponentPropsWithoutRef<"div"> {
   type?: "single" | "multiple";
-  collapsible?: boolean;
   value?: any;
   onValueChange?: (value: any) => void;
 }
 
 function Accordion({
   className,
-  collapsible,
-  type,
+  type = "single",
   value,
   onValueChange,
   ...props
 }: AccordionProps) {
   return (
     <AccordionPrimitive.Root
-      collapsible={collapsible}
-      type={type as any}
+      multiple={type === "multiple"}
       value={value}
       onValueChange={onValueChange}
       render={(renderProps) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { collapsible: _c, type: _t, ...rest } = renderProps as any;
+        const { multiple: _m, ...rest } = renderProps as any;
         return (
           <div
             data-slot="accordion"
             className={cn(
               "flex w-full flex-col overflow-hidden rounded-2xl border",
-              className,
+              className
             )}
             {...rest}
             {...props}

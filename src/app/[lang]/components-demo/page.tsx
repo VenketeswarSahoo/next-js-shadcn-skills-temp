@@ -334,7 +334,6 @@ const Home = () => {
         </h2>
         <Accordion
           type="single"
-          collapsible
           className="w-full max-w-md bg-card rounded-xl border overflow-hidden"
         >
           <AccordionItem value="item-1">
